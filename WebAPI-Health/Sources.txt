@@ -1,0 +1,11 @@
+﻿hhttps://jonhilton.net/security/apis/secure-your-asp.net-core-2.0-api-part-2---jwt-bearer-authentication/
+https://auth0.com/blog/securing-asp-dot-net-core-2-applications-with-jwts/
+
+https://medium.com/@ozgurgul/asp-net-core-2-0-webapi-jwt-authentication-with-identity-mysql-3698eeba6ff8
+
+With roles
+https://www.jerriepelser.com/blog/using-roles-with-the-jwt-middleware/
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+https://www.youtube.com/watch?v=EYBv5EBvwXw
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

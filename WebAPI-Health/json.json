@@ -1,0 +1,27 @@
+﻿{
+  //Create models from DB DB first
+  //dotnet ef dbcontext scaffold "Data Source=DFX-NB-P50-A22\SQLEXPRESS;Initial Catalog=WebAPI;Integrated Security=True" Microsoft.EntityFrameworkCore.SqlServer -o Models\WebApiModels -c WebApiModels -f
+
+
+  //Connection string
+  //optionsBuilder.UseSqlServer(@"Data Source=DFX-NB-P50-A22\SQLEXPRESS;Initial Catalog=WebAPI;Integrated Security=True");
+  //----------------------
+  //"if" "(!optionsBuilder.IsConfigured)",
+  //{
+  //  "optionsBuilder.UseSqlServer(Configuration.GetConnectionString(\"LocalSQLConnection\"));"
+  //}
+
+
+  //"public" "IConfiguration",
+  //"Configuration" { "get;" },
+
+  //"public" "WebApiModels()",
+  //{},
+
+  //"public" "WebApiModels(IConfiguration",
+  //"configuration)" {
+  //  "Configuration" "=",
+  //  "configuration;"
+
+  //}
+}
