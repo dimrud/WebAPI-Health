@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace WebAPIHealth.Models.WebApiModels
 {
-    public partial class WebApiModels : DbContext
+    public partial class WebAPIContext : DbContext
     {
-        public WebApiModels()
+        public WebAPIContext()
         {
         }
 
-        public WebApiModels(DbContextOptions<WebApiModels> options)
+        public WebAPIContext(DbContextOptions<WebAPIContext> options)
             : base(options)
         {
         }
@@ -22,19 +22,21 @@ namespace WebAPIHealth.Models.WebApiModels
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<Table1> Table1 { get; set; }
         public virtual DbSet<Table2> Table2 { get; set; }
-
+        public virtual DbSet<User> User { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-            //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Data Source=DFX-NB-P50-A22\\SQLEXPRESS;Initial Catalog=WebAPI;Integrated Security=True");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=DFX-NB-P50-A22\\SQLEXPRESS;Database=WebAPI;Trusted_Connection=True;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.0-preview3-35497");
+
             modelBuilder.Entity<AspNetRoles>(entity =>
             {
                 entity.HasIndex(e => e.Name)
@@ -67,7 +69,8 @@ namespace WebAPIHealth.Models.WebApiModels
 
             modelBuilder.Entity<AspNetUserLogins>(entity =>
             {
-                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey, e.UserId });
+                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey, e.UserId })
+                    .HasName("PK_dbo.AspNetUserLogins");
 
                 entity.HasIndex(e => e.UserId)
                     .HasName("IX_UserId");
@@ -86,7 +89,8 @@ namespace WebAPIHealth.Models.WebApiModels
 
             modelBuilder.Entity<AspNetUserRoles>(entity =>
             {
-                entity.HasKey(e => new { e.UserId, e.RoleId });
+                entity.HasKey(e => new { e.UserId, e.RoleId })
+                    .HasName("PK_dbo.AspNetUserRoles");
 
                 entity.HasIndex(e => e.RoleId)
                     .HasName("IX_RoleId");
@@ -151,6 +155,87 @@ namespace WebAPIHealth.Models.WebApiModels
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
                     .HasMaxLength(10);
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.Property(e => e.City)
+                    .HasMaxLength(35)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.CredentialsId)
+                    .IsRequired()
+                    .HasMaxLength(128);
+
+                entity.Property(e => e.Dob)
+                    .HasColumnName("DOB")
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(80)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FirstName).HasMaxLength(35);
+
+                entity.Property(e => e.Gender)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('U')");
+
+                entity.Property(e => e.IsTemporary)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.LastModified).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.LastName).HasMaxLength(35);
+
+                entity.Property(e => e.MiddleName).HasMaxLength(35);
+
+                entity.Property(e => e.Notes)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Phone)
+                    .HasMaxLength(25)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Phone2)
+                    .HasMaxLength(25)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Phone3)
+                    .HasMaxLength(25)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PhoneType)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.State)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Street)
+                    .HasMaxLength(35)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Street2)
+                    .HasMaxLength(35)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Zip)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Credentials)
+                    .WithMany(p => p.User)
+                    .HasForeignKey(d => d.CredentialsId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_AspNetUsers");
             });
         }
     }

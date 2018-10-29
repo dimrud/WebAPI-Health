@@ -10,7 +10,7 @@ namespace WebAPIHealth.Data
 {
     public class ApplicaitonDbContext : DbContext //IdentityDbContext<ApplicationUser> 
 	{
-        public ApplicaitonDbContext(DbContextOptions<WebApiModels> options) : base(options)
+        public ApplicaitonDbContext(DbContextOptions<WebAPIContext> options) : base(options)
         {
 
         }

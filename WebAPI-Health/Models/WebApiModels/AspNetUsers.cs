@@ -10,6 +10,7 @@ namespace WebAPIHealth.Models.WebApiModels
             AspNetUserClaims = new HashSet<AspNetUserClaims>();
             AspNetUserLogins = new HashSet<AspNetUserLogins>();
             AspNetUserRoles = new HashSet<AspNetUserRoles>();
+            User = new HashSet<User>();
         }
 
         public string Id { get; set; }
@@ -25,8 +26,9 @@ namespace WebAPIHealth.Models.WebApiModels
         public int AccessFailedCount { get; set; }
         public string UserName { get; set; }
 
-        public ICollection<AspNetUserClaims> AspNetUserClaims { get; set; }
-        public ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
-        public ICollection<AspNetUserRoles> AspNetUserRoles { get; set; }
+        public virtual ICollection<AspNetUserClaims> AspNetUserClaims { get; set; }
+        public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
+        public virtual ICollection<AspNetUserRoles> AspNetUserRoles { get; set; }
+        public virtual ICollection<User> User { get; set; }
     }
 }
