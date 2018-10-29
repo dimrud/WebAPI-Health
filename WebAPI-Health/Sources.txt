@@ -9,3 +9,13 @@ https://www.jerriepelser.com/blog/using-roles-with-the-jwt-middleware/
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 https://www.youtube.com/watch?v=EYBv5EBvwXw
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+////////////////////////////////////////////
+//////////////IMPORTANT STUFF///////////////
+////////////////////////////////////////////
+------------ Connection string 
+ optionsBuilder.UseSqlServer("Data Source=DFX-NB-P50-A22\\SQLEXPRESS;Initial Catalog=WebAPI;Integrated Security=True");
+
+------------ Run EntityFramework update
+Scaffold-DbContext "Server=DFX-NB-P50-A22\SQLEXPRESS;Database=WebAPI;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models\WebApiModels -f

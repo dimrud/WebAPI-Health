@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using WebAPIHealth.Entities;
 
 namespace WebAPIHealth.Factory
 {
 	public interface IDataAccess
 	{
-		 bool CheckCredentials(string userName, string password);
+		string CheckCredentials(string userName, string password);
+		User GetUserById(string userId);
 	}
 }

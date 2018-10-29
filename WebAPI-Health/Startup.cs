@@ -12,6 +12,8 @@ using System.Text;
 using WebAPIHealth.Data;
 using WebAPIHealth.Factory;
 using WebAPIHealth.Models.WebApiModels;
+using AutoMapper;
+using WebAPIHealth.Services;
 
 namespace WebAPIHealth
 {
@@ -63,13 +65,15 @@ namespace WebAPIHealth
 
 			services.AddSingleton<IDataAccess, DataAccess>();
 
-			services.AddDbContext<WebApiModels>(options => options.UseSqlServer(Configuration.GetConnectionString("LocalSQLConnection")));
+			services.AddDbContext<WebAPIContext>(options => options.UseSqlServer(Configuration.GetConnectionString("LocalSQLConnection")));
 			services.AddMvc();
+			services.AddAutoMapper();
 
 
-
+			// configure DI for application services
+			services.AddScoped<IUserService, UserService>();
 			//services.AddIdentity<ApplicationUser, IdentityRole>()
-			//   .AddEntityFrameworkStores<WebApiModels>()
+			//   .AddEntityFrameworkStores<WebAPIContext>()
 			//   .AddDefaultTokenProviders();
 
 			//services.AddIdentity<ApplicationUser, IdentityRole>(options =>

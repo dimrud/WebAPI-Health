@@ -14,7 +14,7 @@ namespace WebAPIHealth.Data
         {
             try
             {
-                var context = serviceProvider.GetRequiredService<WebApiModels>();
+                var context = serviceProvider.GetRequiredService<WebAPIContext>();
                 var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
                 context.Database.EnsureCreated();
 

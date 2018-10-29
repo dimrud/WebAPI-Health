@@ -12,9 +12,9 @@ namespace WebAPIHealth.Controllers
     [Route("api/HC")]
     public class HealthCheckController : Controller
     {
-        private readonly WebApiModels _context;
+        private readonly WebAPIContext _context;
 
-        public HealthCheckController(WebApiModels context)
+        public HealthCheckController(WebAPIContext context)
         {
             _context = context;
         }
