@@ -14,6 +14,8 @@ using WebAPIHealth.Factory;
 using WebAPIHealth.Models.WebApiModels;
 using AutoMapper;
 using WebAPIHealth.Services;
+using Microsoft.AspNetCore.Mvc;
+using WebAPIHealth.Controllers;
 
 namespace WebAPIHealth
 {
@@ -61,31 +63,26 @@ namespace WebAPIHealth
 			});
 
 
-			// services.AddDbContext<ApplicaitonDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
 			services.AddSingleton<IDataAccess, DataAccess>();
+			//services.AddSingleton<IConfiguration, DataAccess>();
+
 
 			services.AddDbContext<WebAPIContext>(options => options.UseSqlServer(Configuration.GetConnectionString("LocalSQLConnection")));
+			//services.AddMvc(options =>
+			//{
+			//	options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+			//});
 			services.AddMvc();
 			services.AddAutoMapper();
 
-
 			// configure DI for application services
+			//services.AddScoped<IAllergy, AllergiesController>();
+			//services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+			//services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
+
+
+			services.AddScoped<IAllergy, AllergieService>();
 			services.AddScoped<IUserService, UserService>();
-			//services.AddIdentity<ApplicationUser, IdentityRole>()
-			//   .AddEntityFrameworkStores<WebAPIContext>()
-			//   .AddDefaultTokenProviders();
-
-			//services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-			//{
-			//options.User.RequireUniqueEmail = false;
-			//})
-			//.AddEntityFrameworkStores<Providers.Database.EFProvider.DataContext>()
-			//.AddDefaultTokenProviders();
-
-
-
-
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
