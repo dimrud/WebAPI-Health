@@ -12,6 +12,7 @@ using WebAPIHealth.Factory;
 
 namespace WebAPIHealth.Controllers
 {
+
 	[Produces("application/json")]
 	[Route("api/Auth")]
 	public class AuthController : Controller
@@ -23,13 +24,12 @@ namespace WebAPIHealth.Controllers
 		{
 			_configuration = configuration;
 			_dataAccessClass = dataAccess;
-
-
 		}
 
 		[HttpPost("token")]
 		public IActionResult Token()
 		{
+
 			var header = Request.Headers["Authorization"];
 			if (!string.IsNullOrWhiteSpace(header) && header.ToString().StartsWith("Basic"))
 			{
@@ -52,7 +52,7 @@ namespace WebAPIHealth.Controllers
 				{
 					claims.Add(new Claim(ClaimTypes.Role, role.ToString()));
 				}
-				//Claim by username ( email)
+				//Claim by username (email)
 				claims.Add(new Claim(ClaimTypes.Name, usernameAndPass[0]));
 
 				var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetValue<string>("SecretKey:Key:KeyValue")));
@@ -69,11 +69,9 @@ namespace WebAPIHealth.Controllers
 					claims: claims,
 					signingCredentials: signInCredentials
 					);
-				//string tokenString = string.Empty;
 
 				try
 				{
-					//tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 					user.Token = new JwtSecurityTokenHandler().WriteToken(token);
 				}
 				catch (Exception ex)

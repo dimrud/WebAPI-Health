@@ -33,8 +33,8 @@ namespace WebAPIHealth.Controllers
 			return User.Claims.Select(c =>
 			new
 			{
-				Type = c.Type,
-				Value = c.Value
+				c.Type,
+				c.Value
 			});
 		}
 

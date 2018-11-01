@@ -20,6 +20,7 @@ namespace WebAPIHealth.Models.WebApiModels
         public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
+        public virtual DbSet<PatientAllergies> PatientAllergies { get; set; }
         public virtual DbSet<Table1> Table1 { get; set; }
         public virtual DbSet<Table2> Table2 { get; set; }
         public virtual DbSet<User> User { get; set; }
@@ -130,6 +131,69 @@ namespace WebAPIHealth.Models.WebApiModels
                 entity.Property(e => e.UserName)
                     .IsRequired()
                     .HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<PatientAllergies>(entity =>
+            {
+                entity.ToTable("patient_allergies");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Allergy)
+                    .HasColumnName("allergy")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AllergyCode)
+                    .HasColumnName("allergy_code")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AllergyType)
+                    .HasColumnName("allergy_type")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.BeginDate)
+                    .HasColumnName("begin_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnName("create_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedUid).HasColumnName("created_uid");
+
+                entity.Property(e => e.Eid).HasColumnName("eid");
+
+                entity.Property(e => e.EndDate)
+                    .HasColumnName("end_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Location)
+                    .HasColumnName("location")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Pid).HasColumnName("pid");
+
+                entity.Property(e => e.Reaction)
+                    .HasColumnName("reaction")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Severity)
+                    .HasColumnName("severity")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdateDate)
+                    .HasColumnName("update_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedUid).HasColumnName("updated_uid");
             });
 
             modelBuilder.Entity<Table1>(entity =>
