@@ -12,7 +12,7 @@ namespace WebAPIHealth.Factory
 		//User Authenticate(string username, string password);
 		Task<List<Models.WebApiModels.User>> GetAllUsersAsync();
 		Task<bool> UpdateUserAsync(User user);
-
+		Task<string> DeleteUserAsync(User user);
 		//User GetById(int id);
 		//User Create(User user, string password);
 		//void Update(User user, string password = null);
