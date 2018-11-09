@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace WebAPIHealth.Models.WebApiModels
 {
-    public partial class Table1
+    public partial class HealthCheck
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
     }
 }

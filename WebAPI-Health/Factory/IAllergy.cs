@@ -9,6 +9,6 @@ namespace WebAPIHealth.Factory
 	public interface IAllergy
 	{
 		Task CreateAllergyAsync(string allergie);
-		Task<List<PatientAllergies>> GetAllAllergyAsync();
+		Task<List<Allergies>> GetAllAllergyAsync();
 	}
 }

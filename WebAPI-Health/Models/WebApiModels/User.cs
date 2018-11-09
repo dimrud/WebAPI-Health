@@ -11,7 +11,7 @@ namespace WebAPIHealth.Models.WebApiModels
         public string LastName { get; set; }
         public string Dob { get; set; }
         public DateTime Created { get; set; }
-        public bool? IsTemporary { get; set; }
+        public bool IsTemporary { get; set; }
         public string Street { get; set; }
         public string Street2 { get; set; }
         public string City { get; set; }
