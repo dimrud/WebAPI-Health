@@ -98,6 +98,24 @@ namespace WebAPIHealth.Services
 		{
 			try
 			{
+				//Transaction usage
+				//using (var tran = _context.Database.BeginTransaction())
+				//{
+				//	try
+				//	{
+				//		User exist = await _context.Set<User>().FindAsync(user.UserId);
+
+				//		_context.SaveChanges();
+				//		tran.Commit();
+				//	}
+				//	catch (Exception)
+				//	{
+				//		tran.Rollback();
+				//		throw;
+				//	}
+				//}
+
+
 				using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
 				{
 					User userToDelete = await _context.Set<User>().FindAsync(user.UserId);

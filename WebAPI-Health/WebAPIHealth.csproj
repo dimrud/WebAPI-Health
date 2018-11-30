@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>483e70f4-6306-4b62-a912-e49feb3b0533</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +19,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0-preview3-35497" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
 	<PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
   </ItemGroup>
 

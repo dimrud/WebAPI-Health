@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -29,6 +30,30 @@ namespace WebAPIHealth.Controllers
 		[HttpPost("token")]
 		public IActionResult Token()
 		{
+			//try
+			//{
+			//	//Connect to Azure Example
+			//	string connStr = "Server=tcp:dimrud.database.windows.net,1433;Initial Catalog=TestDIMRUD-DB;Persist Security Info=False;User ID=dimrud;Password=Vm3r!010;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+			//	using (SqlConnection connection = new SqlConnection(connStr))
+			//	using (SqlCommand command = new SqlCommand("select * from saleslt.customer", connection))
+			//	{
+			//		connection.Open();
+			//		using (SqlDataReader reader = command.ExecuteReader())
+			//		{
+			//			while (reader.Read())
+			//			{
+			//				Console.WriteLine(reader["Username"].ToString());
+			//				Console.WriteLine(reader["Item"].ToString());
+			//				Console.WriteLine(reader["Amount"].ToString());
+			//				Console.WriteLine(reader["Complete"].ToString());
+			//			}
+			//		}
+			//	}
+			//}
+			//catch (Exception ex)
+			//{
+			//	string exp = ex.Message;
+			//}
 
 			var header = Request.Headers["Authorization"];
 			if (!string.IsNullOrWhiteSpace(header) && header.ToString().StartsWith("Basic"))
