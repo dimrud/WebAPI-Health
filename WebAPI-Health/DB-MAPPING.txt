@@ -1,0 +1,161 @@
+﻿CREATE TABLE ProcedureOrder (
+   Id [uniqueidentifier] ROWGUIDCOL  NOT NULL,
+   ProviderId              [int]   NOT NULL, -- Doctor ID or any other provider Id from Users table
+   PatientId               [int]   NOT NULL, -- Patient Id from User table
+   EncounterId             [uniqueidentifier]   NULL, --COMMENT 'references form_encounter.encounter',
+   DateCollected           datetime     NOT NULL,
+   DateOrdered             date         NOT NULL,
+   OrderPriority           [int]  NULL, -- from priority table :  High, low etc
+   OrderStatus             [int] NOT NULL, -- from Status table  pending,routed,complete,canceled',
+   PatientInstructions     [varchar](255),
+   Activity                bit  NOT NULL, -- DEFAULT 1  COMMENT '0 if deleted',
+   ControlId               [varchar](255) NULL, -- DEFAULT '' COMMENT 'This is the CONTROL ID that is sent back from lab',
+   LabId                   [int]  NOT NULL , -- 'references procedure_providers.ppid',
+   SpecimenType            [int]  NOT NULL , -- from Specimens table : blood , urine , etc
+   SpecimenLocation        [varchar](255) NULL, -- from the Specimen_Location list',
+   SpecimenVolume          [varchar](100)  NULL , --from a text input field',
+   DateTransmitted         datetime NULL , --time of order transmission, null if unsent',
+   ClinicalHx             [varchar](255) NULL, -- 'clinical history text that may be relevant to the order',
+   ExternalId             [int] NULL, --For any external if , not in use
+   HistoryOrder            bit NOT NULL) --references order is added for history purpose only.'
+
+------------------------------------------------------------------------------------------------------
+CREATE TABLE ProcedureProviders (
+   Ppid         [int] IDENTITY(1,1) NOT NULL, -- ID for index
+   FullName     [varchar](255) NOT NULL, -- Full name of Provider
+   NPI          [varchar](15)  NOT NULL, -- NPI
+   SendAppId    [varchar](255) NOT NULL , -- Sending application ID (MSH-3.1)
+   SendFacId    [varchar](255) NOT NULL , -- Sending facility ID (MSH-4.1)
+   RecvAppId    [varchar](255) NOT NULL , -- Receiving application ID (MSH-5.1)
+   RecvFacId    [varchar](255) NOT NULL , -- Receiving facility ID (MSH-6.1)
+   Direction    [char](1)      NOT NULL , -- Bidirectional or Results-only
+   Protocol     [varchar](15)  NOT NULL ,
+   RemoteHost   [varchar](255) NOT NULL ,
+   OrdersPath   [varchar](255) NOT NULL,
+   ResultsPath  [varchar](255) NOT NULL,
+   Notes        [varchar](255) NULL)
+------------------------------------------------------------------------------------------------------
+CREATE TABLE ProcedureType ( -- `procedure_type`;
+   Id              [int]  IDENTITY(1,1) NOT NULL, -- ID for index
+   Parent          [int]  NULL, --references ProcedureType.id in case we have multiple explanation for the same procedure type, null if initial procedure type
+   Name            [varchar](255) NOT NULL, --name for this category, procedure or result type
+   LabId           [int]   NULL, -- references ProcedureProviders.ppid, 0 means default to parent
+   ProcedureCode   [varchar](100) NOT NULL,  --code identifying this procedure
+   ProcedureType   [int] NOT NULL, -- Code taken from ProcedureTypes table
+   BodySite        [varchar](100) NULL, --Where to do injection, taken from ProcedureBodySites table'
+   Specimen        [int]  NULL , -- from Specimens table : blood , urine , etc
+   RouteAdmin      [int]  NULL, -- Code taken from ProcedureRoutes table
+   Laterality      [varchar](100) NULL, -- Code taken from ProcedureLateralities table',
+   Description     [varchar](255) NULL, -- descriptive text for procedure_code
+   StandardCode    [varchar](255) NULL, --industry standard code type and code (e.g. CPT4:12345)
+   RelatedCode     [varchar](255) NULL, -- suggested code(s) for followup services if result is abnormal
+   Units           [int]  NULL, --default for ProcedureResult.Units
+   Range           [varchar](255) NULL, --default for ProcedureResult.range
+   Seq             [int]  NULL, --sequence number for ordering
+   Activity        bit NULL , --1=active, 0=inactive
+   Notes           [varchar](255) NULL ) --additional notes to enhance description
+--------------------------------------------------------------------------------------------------------
+CREATE TABLE ProcedureReport (
+   Id [uniqueidentifier] ROWGUIDCOL  NOT NULL,
+   ProcedureOrderId     [uniqueidentifier]   NOT NULL, --references ProcedureOrder.Id
+   ProcedureOrderSeq    [int]        NOT NULL ,-- 'references ProcedureOrderCode.ProcedureOrderSeq'
+   DateCollected        datetime     NULL,
+   DateCollectedTZ      [varchar](5) NULL, -- +-hhmm offset from UTC
+   DateReport           datetime     NULL,
+   DateReportTZ         [varchar](5)  NULL, -- +-hhmm offset from UTC
+   Source               [int]     NOT NULL, -- references Users.Id, who entered this data
+   Specimen             [int]  NULL , -- from Specimens table : blood , urine , etc
+   ReportStatus         [int]  NULL, -- taken from ProcedureReportStatuses table 
+   ReviewStatus         [int]  NULL, -- taken from ProcedureReportStatuses table  
+   ReportNotes        [varchar](255) NULL)
+------------------------------------------------------------------------------------------------------
+CREATE TABLE ProcedureResult (
+   Id [uniqueidentifier] ROWGUIDCOL  NOT NULL,
+   ProcedureReportId    [uniqueidentifier]   NOT NULL, --references ProcedureReport.Id
+   ResultDataType       char(1)      NOT NULL, -- DEFAULT 'S' 'N=Numeric, S=String, F=Formatted, E=External, L=Long text as first line of comments
+   ResultCode           [varchar](100)  NULL, -- DEFAULT '' COMMENT 'LOINC code, might match a ProcedureType.ProcedureCode
+   ResultText           [varchar](255)  NULL, -- 'Description of result_code',
+   ResultDate           datetime   NULL,       --lab-provided date specific to this result
+   Facility             [varchar](255) NULL,  --lab-provided testing facility ID
+   Units                [int]  NULL , --default for ProcedureResult.Units
+   Result               [varchar](255) NULL, -- text with result
+   Range               [varchar](255) NULL,
+   Abnormal           [int] NULL, --taken from ProcedureResultAbnormal  table 
+   Comments           [varchar](255) NULL, --comments from the lab
+   DocumentId         [uniqueidentifier]   NULL , -- references documents.id if this result is a document or file id
+   ResultStatus       [int]  NOT NULL )
+----------------------------------------------------------------------------------------------------
+   CREATE TABLE ProcedureOrderCode (
+   ProcedureOrderId     [uniqueidentifier]  NOT NULL, --references ProcedureOrder.Id
+   ProcedureOrderSeq    [int] NOT NULL, --Supports multiple tests per order. ProcedureOrderSeq, incremented in code
+   ProcedureCode      [int] NOT NULL, -- reference ProcedureType.ProcedureCode
+   ProcedureSource      char(1)  NULL , -- 1=original order, 2=added after order sent
+   Diagnoses           [varchar](255) NULL, --diagnoses and maybe other coding (e.g. ICD9:111.11)
+   DoNotSend          bit  NULL, --0 = normal, 1 = do not transmit to lab
+   ProcedureOrderTitle [varchar](255))
+-----------------------------------------------------------------------------------------------------
+--use [WebAPI]
+   --CREATE TABLE Priorities  (
+   --Id [int]  IDENTITY(1,1) NOT NULL,
+   --Priority [varchar](100) Not NULL,
+   --Description [varchar](255))
+
+   --use [WebAPI]
+   --CREATE TABLE Statuses  (
+   --Id [int]  IDENTITY(1,1) NOT NULL,
+   --Status [varchar](100) Not NULL,
+   --Description [varchar](255))
+   
+   --use [WebAPI]
+   --CREATE TABLE ProcedureTypes  (
+   --Id [int]  IDENTITY(1,1) NOT NULL,
+   --Type [varchar](100) Not NULL,
+   --Description [varchar](255))
+
+    --use [WebAPI]
+   --CREATE TABLE Specimens  (
+   --Id [int]  IDENTITY(1,1) NOT NULL,
+   --Specimen [varchar](100) Not NULL,
+   --Description [varchar](255))
+   
+   --use [WebAPI]
+   --CREATE TABLE ProcedureRoutes  (
+   --Id [int]  IDENTITY(1,1) NOT NULL,
+   --Route [varchar](100) Not NULL,
+   --Description [varchar](255))
+
+   --use [WebAPI]
+   --CREATE TABLE ProcedureLateralities  (
+   --Id [int]  IDENTITY(1,1) NOT NULL,
+   --Laterality [varchar](100) Not NULL,
+   --Description [varchar](255))
+
+   --use [WebAPI]
+   --CREATE TABLE ProcedureUnits  (
+   --Id [int]  IDENTITY(1,1) NOT NULL,
+   --Unit [varchar](100) Not NULL,
+   --Description [varchar](255))
+
+   -- use [WebAPI]
+   --CREATE TABLE ProcedureBodySites  (
+   --Id [int]  IDENTITY(1,1) NOT NULL,
+   --BodySite [varchar](100) Not NULL,
+   --Description [varchar](255))
+
+   -- use [WebAPI]
+   --CREATE TABLE OrderTypes  (
+   --Id [int]  IDENTITY(1,1) NOT NULL,
+   --OrderType [varchar](100) Not NULL,
+   --Description [varchar](255))
+
+   -- use [WebAPI]
+   --CREATE TABLE ProcedureReportStatuses  (
+   --Id [int]  IDENTITY(1,1) NOT NULL,
+   --ReportStatus [varchar](100) Not NULL,
+   --Description [varchar](255))
+
+  --    use [WebAPI]
+   --CREATE TABLE ProcedureResultAbnormal  (
+   --Id [int]  IDENTITY(1,1) NOT NULL,
+   --ResultAbnormal [varchar](100) Not NULL,
+   --Description [varchar](255

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 using WebAPIHealth.Data;
 //using WebAPIHealth.Entities;
 using WebAPIHealth.Factory;
@@ -47,6 +48,7 @@ namespace WebAPIHealth.Services
 
 		public async Task<List<Models.WebApiModels.User>> GetAllUsersAsync()
 		{
+
 			return await _context.User.ToListAsync();
 			//return _context.Users;
 		}
@@ -92,6 +94,65 @@ namespace WebAPIHealth.Services
 			//return _context.Users;
 		}
 
+		public async Task<string> DeleteUserAsync(User user)
+		{
+			try
+			{
+				//Transaction usage
+				//using (var tran = _context.Database.BeginTransaction())
+				//{
+				//	try
+				//	{
+				//		User exist = await _context.Set<User>().FindAsync(user.UserId);
+
+				//		_context.SaveChanges();
+				//		tran.Commit();
+				//	}
+				//	catch (Exception)
+				//	{
+				//		tran.Rollback();
+				//		throw;
+				//	}
+				//}
+
+
+				using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+				{
+					User userToDelete = await _context.Set<User>().FindAsync(user.UserId);
+
+					if (userToDelete != null)
+					{
+						//3 ways to ask EF for results 
+						//1 
+						//var local = _context.Set<User>()
+						//	 .Local
+						//	 .FirstOrDefault(f => f.UserId == user.UserId);
+						//2
+						//User newUser = _context.User.AsNoTracking().Where(t => t.UserId == user.UserId).FirstOrDefault();
+						//3
+						//User exist = await _context.Set<User>().FindAsync(user.UserId);
+
+						AspNetUsers userCredentials = await _context.Set<AspNetUsers>().FindAsync(userToDelete.CredentialsId);
+
+						_context.Entry(userToDelete).State = EntityState.Detached;
+						_context.Entry(userCredentials).State = EntityState.Detached;
+
+						_context.Set<User>().Remove(userToDelete);
+						_context.Set<AspNetUsers>().Remove(userCredentials);
+
+						await _context.SaveChangesAsync();
+						scope.Complete();
+						return "User was deleted";
+					}
+					return "Can't find user";
+				}
+			}
+			catch (Exception ex)
+			{
+				string exception = ex.Message;
+				return ex.Message;
+			}
+		}
 
 		//public User GetById(int id)
 		//{

@@ -23,12 +23,12 @@ namespace WebAPIHealth.Services
 			return null;
 		}
 
-		public async Task<List<PatientAllergies>>  GetAllAllergyAsync()
+		public async Task<List<Allergies>>  GetAllAllergyAsync()
 		{
 			//var result = await (from e in _context.PatientAllergies
 			//					select e).ToListAsync();
 
-			var allergies = await _context.PatientAllergies.ToListAsync();
+			var allergies = await _context.Allergies.ToListAsync();
 			return allergies;
 		}
 	}

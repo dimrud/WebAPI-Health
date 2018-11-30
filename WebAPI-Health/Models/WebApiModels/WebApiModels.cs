@@ -20,8 +20,6 @@ namespace WebAPIHealth.Models.WebApiModels
         public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
-        public virtual DbSet<Table1> Table1 { get; set; }
-        public virtual DbSet<Table2> Table2 { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -128,30 +126,7 @@ namespace WebAPIHealth.Models.WebApiModels
                     .HasMaxLength(256);
             });
 
-            modelBuilder.Entity<Table1>(entity =>
-            {
-                entity.ToTable("Table_1");
-
-                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.Name)
-                    .HasColumnName("name")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<Table2>(entity =>
-            {
-                entity.ToTable("Table_2");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Name)
-                    .HasColumnName("name")
-                    .HasMaxLength(10);
-            });
+           
         }
     }
 }

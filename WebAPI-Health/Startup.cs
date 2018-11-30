@@ -1,21 +1,21 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 using WebAPIHealth.Data;
 using WebAPIHealth.Factory;
 using WebAPIHealth.Models.WebApiModels;
-using AutoMapper;
 using WebAPIHealth.Services;
-using Microsoft.AspNetCore.Mvc;
-using WebAPIHealth.Controllers;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 namespace WebAPIHealth
 {
@@ -72,11 +72,10 @@ namespace WebAPIHealth
 			//{
 			//	options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
 			//});
-			services.AddMvc();
+			services.AddMvc().AddJsonOptions(opt => opt.SerializerSettings.ContractResolver = new DefaultContractResolver());
 			services.AddAutoMapper();
 
 			// configure DI for application services
-			//services.AddScoped<IAllergy, AllergiesController>();
 			//services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 			//services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
 
@@ -95,6 +94,22 @@ namespace WebAPIHealth
 
 			loggerFactory.AddConsole(Configuration.GetSection("Logging"));
 			loggerFactory.AddDebug();
+
+			var supportedCultures = new[]
+			{
+				new CultureInfo("en"),
+				new CultureInfo("es"),
+				new CultureInfo("fr")
+			};
+
+			app.UseRequestLocalization(new RequestLocalizationOptions
+			{
+				DefaultRequestCulture = new RequestCulture("en-US"),
+				// Formatting numbers, dates, etc.
+				SupportedCultures = supportedCultures,
+				// UI strings that we have localized.
+				SupportedUICultures = supportedCultures
+			});
 
 			app.UseCors(x => x
 			   .AllowAnyOrigin()

@@ -49,5 +49,19 @@ namespace WebAPIHealth.Controllers
 			}
 		}
 
+		[HttpPut("DeleteUser/{id}")]
+		public async Task<IActionResult> DeleteUserAsync([FromBody] Models.WebApiModels.User userId)
+		{
+			try
+			{
+				string result = await _userService.DeleteUserAsync(userId);
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(string.Format("Can't return list : {0}", ex.Message));
+			}
+		}
+
 	}
 }
